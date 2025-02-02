@@ -18,7 +18,10 @@ db.init_app(app)
 @app.route('/messages', methods=['GET'])
 def get_messages():
     messages = Message.query.order_by(Message.created_at.asc()).all()
+    if messages is None:
+        return jsonify([]), 200  # Return an empty list instead of None
     return jsonify([message.to_dict() for message in messages]), 200
+
 
 # POST /messages
 @app.route('/messages', methods=['POST'])

@@ -1,7 +1,7 @@
 from datetime import datetime
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import MetaData
-from sqlalchemy_serializer import SerializerMixin
+
 
 metadata = MetaData(naming_convention={
     "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
@@ -9,7 +9,7 @@ metadata = MetaData(naming_convention={
 
 db = SQLAlchemy(metadata=metadata)
 
-class Message(db.Model, SerializerMixin):
+class Message(db.Model):
     __tablename__ = 'messages'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -22,3 +22,12 @@ class Message(db.Model, SerializerMixin):
 
     def __repr__(self):
         return f"<Message {self.body} by {self.username}>"
+
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "body": self.body,
+            "username": self.username,
+            "created_at": self.created_at.isoformat(),
+        }
